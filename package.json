@@ -1,0 +1,24 @@
+{
+  "name": "555",
+  "version": "1.0.0",
+  "description": "reddit word archive",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cshutchinson/555.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cshutchinson/555/issues"
+  },
+  "homepage": "https://github.com/cshutchinson/555#readme",
+  "dependencies": {
+    "knex": "^0.9.0",
+    "pg": "^4.4.3"
+  }
+}
