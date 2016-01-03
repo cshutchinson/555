@@ -8,8 +8,6 @@ var knex = require('knex')({
   }
 })
 
-var words = [];
-
 var options = {
   host: 'www.reddit.com',
   path: '/r/all/.json'
@@ -31,16 +29,40 @@ callback = function(response) {
         reddit_url: elem.data.url,
         reddit_created_utc: elem.data.created_utc
       }, "id").then(function(id){
-        // console.log('Inserted record: ', id);
+        // processWords()
+        // can insert words here after processing
+        console.log(processWords(elem.data.title));
       })
-      words = words.concat(elem.data.title.split(' '));
     })
-    console.log(words.length, words);
   });
 }
 
 http.request(options, callback).end();
 
-function splitString(wordString){
-  return wordString.split(' ');
+function processWords(wordsString){
+  var tempWords = wordsString.split(' ');
+  tempWords = tempWords.map(function(elem){
+    return elem.toLowerCase();
+  })
+  tempWords = removePunctuation(tempWords);
+  tempWords = removeEmptyElements(tempWords);
+  return tempWords;
+  //eliminate single letters
+  //stop words
+//   ['a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from',
+//   'has', 'he', 'in', 'it', 'is', 'its', 'of', 'on', 'that', 'the',
+//   'to', 'was', 'were', 'will', 'with']
+}
+
+function removePunctuation(wordsArray){
+  return wordsArray.map(function(elem){
+    return elem.replace(/[.!?'":;{},%\d*\[\]]/gi, '');
+  })
+}
+
+function removeEmptyElements(wordsArray){
+  return wordsArray.filter(function(elem){
+    return elem !== '';
+  })
+
 }
