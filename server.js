@@ -1,4 +1,5 @@
 var http = require('http');
+var stopWords = require('./stopwords');
 
 var knex = require('knex')({
   client: 'pg',
@@ -46,17 +47,15 @@ function processWords(wordsString){
   })
   tempWords = removePunctuation(tempWords);
   tempWords = removeEmptyElements(tempWords);
+  tempWords = removeStopWords(tempWords, stopWords);
+  tempWords = removeSingleCharacters(tempWords);
   return tempWords;
-  //eliminate single letters
-  //stop words
-//   ['a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from',
-//   'has', 'he', 'in', 'it', 'is', 'its', 'of', 'on', 'that', 'the',
-//   'to', 'was', 'were', 'will', 'with']
 }
 
 function removePunctuation(wordsArray){
   return wordsArray.map(function(elem){
-    return elem.replace(/[.!?'":;{},%\d*\[\]]/gi, '');
+    // return elem.replace(/[.!?'":;\-{},%\d*\[\]]/gi, '');
+    return elem.replace(/[\W\d'"*$\[\]]/gi, '');
   })
 }
 
@@ -64,5 +63,16 @@ function removeEmptyElements(wordsArray){
   return wordsArray.filter(function(elem){
     return elem !== '';
   })
+}
 
+function removeStopWords(wordsArray, stopWords){
+  return wordsArray.filter(function(elem){
+    return stopWords.indexOf(elem) < 0;
+  })
+}
+
+function removeSingleCharacters(wordsArray){
+  return wordsArray.filter(function(elem){
+    return elem.length > 1;
+  })
 }
